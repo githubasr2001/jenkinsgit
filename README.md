@@ -1,4 +1,3 @@
-#Testing Jenkins
+#Testing 
 
-
-this is my first build
+This project is used to test jenkins and git integration and also used to deploy Python code
