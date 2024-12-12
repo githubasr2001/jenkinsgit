@@ -1,0 +1,67 @@
+pipeline {
+    // Use any available Jenkins agent/node to run the pipeline
+    agent any
+    
+    // Environment variables can be set here if needed
+    environment {
+        // Set the Python version to use
+        PYTHON_VERSION = 'python3'
+    }
+    
+    // Stages define the entire build, test, and deployment process
+    stages {
+        // Stage to clone the repository
+        stage('Checkout') {
+            steps {
+                // Clone the specific GitHub repository
+                git branch: 'main', 
+                    url: 'https://github.com/githubasr2001/jenkinsgit.git'
+            }
+        }
+        
+        // Stage to set up Python environment
+        stage('Setup') {
+            steps {
+                // Ensure Python is installed and version is checked
+                script {
+                    sh """
+                        ${PYTHON_VERSION} --version
+                        which ${PYTHON_VERSION}
+                    """
+                }
+            }
+        }
+        
+        // Stage to run the Python script
+        stage('Run Application') {
+            steps {
+                // Execute the Python script
+                sh """
+                    ${PYTHON_VERSION} app.py
+                """
+            }
+        }
+        
+        // Optional stage to display readme contents
+        stage('Display README') {
+            steps {
+                // Show the contents of the README file
+                sh 'cat README.md'
+            }
+        }
+    }
+    
+    // Post-build actions
+    post {
+        // Actions to take after the pipeline completes
+        success {
+            // Print success message if all stages pass
+            echo 'Pipeline completed successfully!'
+        }
+        
+        failure {
+            // Print failure message if any stage fails
+            echo 'Pipeline failed. Check the logs for details.'
+        }
+    }
+}
